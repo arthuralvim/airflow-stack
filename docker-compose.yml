@@ -1,0 +1,85 @@
+---
+
+version: '2'
+
+services:
+    database:
+        image: postgres:9.4
+        container_name: database
+        env_file:
+            - .env
+        volumes:
+            - /home/airflow-stack/postgres/:/var/lib/postgresql/data/
+        ports:
+            - "5432:5432"
+        restart: always
+
+    queue:
+        image: rabbitmq:3.6-management
+        container_name: queue
+        env_file:
+            - .env
+        expose:
+            - '5672'
+        ports:
+            - '8081:15672'
+        restart: always
+
+
+    web:
+        image: airflow
+        container_name: web
+        build: .
+        user: airflow
+        env_file:
+            - .env
+        volumes:
+            - /home/airflow-stack/web/logs/:/home/airflow-stack/web/logs/
+        restart: always
+        command: webserver
+        ports:
+            - '80:8080'
+        links:
+            - database
+            - queue
+
+    worker:
+        image: airflow
+        container_name: worker
+        env_file:
+            - .env
+        volumes:
+            - /home/airflow-stack/web/logs/:/home/airflow-stack/web/logs/
+        restart: always
+        command: worker
+        links:
+            - database
+            - queue
+
+    flower:
+        image: airflow
+        container_name: flower
+        env_file:
+            - .env
+        volumes:
+            - /home/airflow-stack/web/logs/:/home/airflow-stack/web/logs/
+        restart: always
+        command: flower
+        ports:
+            - '5757:5555'
+        links:
+            - database
+            - queue
+
+    scheduler:
+        image: airflow
+        container_name: scheduler
+        env_file:
+            - .env
+        volumes:
+            - /home/airflow-stack/web/logs/:/home/airflow-stack/web/logs/
+        restart: always
+        command: scheduler
+        links:
+            - database
+            - queue
