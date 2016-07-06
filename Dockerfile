@@ -38,9 +38,10 @@ RUN pip install ipython
 RUN pip install ipdb
 RUN pip install raven[flask]
 
-ENV AIRFLOW_HOME /home/airflow-stack/web
-RUN useradd -ms /bin/bash -d /home/airflow-stack airflow
+ENV AIRFLOW_HOME /usr/local/airflow
+ENV C_FORCE_ROOT true  # run airflow worker by root
 RUN mkdir -p ${AIRFLOW_HOME}
+RUN useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
 ARG AIRFLOW_VERSION=1.7.0
 
 RUN pip install airflow[s3,postgresql,rabbitmq,password,slack,celery]==$AIRFLOW_VERSION
@@ -48,9 +49,6 @@ RUN pip install airflow[async,hdfs,hive]==$AIRFLOW_VERSION
 
 WORKDIR ${AIRFLOW_HOME}
 ADD . .
-RUN mkdir -p ${AIRFLOW_HOME}/logs
-RUN chown -R airflow:airflow ${AIRFLOW_HOME}
-RUN chown -R airflow:airflow ${AIRFLOW_HOME}/logs
+RUN chown -R airflow: ${AIRFLOW_HOME}
 RUN chmod +x ${AIRFLOW_HOME}/entrypoint.sh
-USER airflow
 ENTRYPOINT ["./entrypoint.sh"]
