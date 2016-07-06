@@ -1,4 +1,5 @@
 FROM ubuntu:trusty
+MAINTAINER Arthur Alvim <afmalvim@gmail.com>
 
 RUN apt-get update -yqq
 
@@ -39,7 +40,7 @@ RUN pip install ipdb
 RUN pip install raven[flask]
 
 ENV AIRFLOW_HOME /usr/local/airflow
-ENV C_FORCE_ROOT true  # run airflow worker by root
+ENV C_FORCE_ROOT true  # RUN AIRFLOW WORKER BY ROOT !!! (CHECK SIDE EFFECTS!)
 RUN mkdir -p ${AIRFLOW_HOME}
 RUN useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
 ARG AIRFLOW_VERSION=1.7.0

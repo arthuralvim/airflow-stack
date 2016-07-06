@@ -32,8 +32,8 @@ services:
         build: .
         env_file:
             - .env
-        volumes:
-            - /home/airflow-stack/web/:/usr/local/airflow/
+        # volumes:
+        #     - /home/airflow-stack/web/logs/:/usr/local/airflow/logs/
         restart: always
         command: webserver
         ports:
@@ -47,8 +47,8 @@ services:
         container_name: worker
         env_file:
             - .env
-        volumes:
-            - /home/airflow-stack/web/:/usr/local/airflow/
+        # volumes:
+        #     - /home/airflow-stack/web/logs/:/usr/local/airflow/logs/
         restart: always
         command: worker
         links:
@@ -60,8 +60,8 @@ services:
         container_name: flower
         env_file:
             - .env
-        volumes:
-            - /home/airflow-stack/web/:/usr/local/airflow/
+        # volumes:
+        #     - /home/airflow-stack/web/logs/:/usr/local/airflow/logs/
         restart: always
         command: flower
         ports:
@@ -75,8 +75,8 @@ services:
         container_name: scheduler
         env_file:
             - .env
-        volumes:
-            - /home/airflow-stack/web/:/usr/local/airflow/
+        # volumes:
+        #     - /home/airflow-stack/web/logs/:/usr/local/airflow/logs/
         restart: always
         command: scheduler
         links:
